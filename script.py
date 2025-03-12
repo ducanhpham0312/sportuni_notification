@@ -52,6 +52,7 @@ def notify(all_found_elements):
     
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
+    msg['To'] = ', '.join(EMAIL_TO)  # Set the 'To' header with all recipients
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     
@@ -60,10 +61,8 @@ def notify(all_found_elements):
         server.starttls()
         server.login(SMTP_USER, SMTP_PASS)
         
-        for email in EMAIL_TO:
-            msg['To'] = email
-            server.sendmail(EMAIL_FROM, email, msg.as_string())
-            print(f'Notification sent to {email} successfully.')
+        server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
+        print('Notification sent successfully.')
         
         server.quit()
     except Exception as e:
