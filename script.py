@@ -38,8 +38,10 @@ def check_website():
         if found_elements:
             all_found_elements[url] = found_elements
     
-    if all_found_elements:
+    if len(all_found_elements):
         notify(all_found_elements)
+    else:
+        print('No new schedule found.')
 
 def notify(all_found_elements):
     subject = '[Auto] Lịch đánh cầu mới tìm thấy'
