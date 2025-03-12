@@ -32,7 +32,7 @@ def check_website():
         
         found_elements = []
         for search_text in SEARCH_TEXTS:
-            elements = soup.find_all(text=lambda text: text and search_text in text)
+            elements = soup.find_all(string=lambda string: string and search_text in string)
             found_elements.extend(elements)
         
         if found_elements:
