@@ -5,7 +5,7 @@ on:
     - cron: '* * * * *'  # Runs every minute
   push:
     branches:
-      - main
+      - master
 
 jobs:
   run-script:
