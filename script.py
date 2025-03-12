@@ -52,7 +52,7 @@ def notify(all_found_elements):
     
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
-    msg['To'] = ', '.join(EMAIL_TO)  # Set the 'To' header with all recipients
+    msg['Bcc'] = ', '.join(EMAIL_TO)  # Set the 'Bcc' header with all recipients
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     
