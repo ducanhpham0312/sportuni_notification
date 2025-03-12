@@ -10,10 +10,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration
-URL = 'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=0'
-# SEARCH_TEXTS = ['19:00 Badminton', '20:00 Badminton', '21:00 Badminton', '20:30 Badminton', 
-#                 '21:30 Badminton', '17:00 Badminton', '18:00 Badminton']  
-SEARCH_TEXTS = ['07:00 Badminton', '08:00 Badminton', '09:00 Badminton']
+URLS = [
+    'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=0',
+    'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=1'
+]
+SEARCH_TEXTS = ['19:00 Badminton', '20:00 Badminton', '21:00 Badminton', '20:30 Badminton', 
+                '21:30 Badminton', '17:00 Badminton', '18:00 Badminton']  
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 EMAIL_TO = os.getenv('EMAIL_TO').split(',')  # Assuming EMAIL_TO is a comma-separated list of emails
 SMTP_SERVER = os.getenv('SMTP_SERVER')
@@ -22,21 +24,31 @@ SMTP_USER = os.getenv('SMTP_USER')
 SMTP_PASS = os.getenv('SMTP_PASS')
 
 def check_website():
-    response = requests.get(URL)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    all_found_elements = {}
     
-    found_elements = []
-    for search_text in SEARCH_TEXTS:
-        elements = soup.find_all(text=lambda text: text and search_text in text)
-        found_elements.extend(elements)
+    for url in URLS:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        found_elements = []
+        for search_text in SEARCH_TEXTS:
+            elements = soup.find_all(text=lambda text: text and search_text in text)
+            found_elements.extend(elements)
+        
+        if found_elements:
+            all_found_elements[url] = found_elements
     
-    if found_elements:
-        notify(found_elements)
+    if all_found_elements:
+        notify(all_found_elements)
 
-def notify(elements):
+def notify(all_found_elements):
     subject = '[Auto] Lịch đánh cầu mới tìm thấy'
     body = 'Vào SportUni đặt lịch đi nè, nhanh không kẻo lỡ:\n\n'
-    body += '\n'.join([str(element) for element in elements])
+    
+    for url, elements in all_found_elements.items():
+        body += 'Tuần này:\n' if url.includes('week=0') else 'Tuần sau:\n'
+        body += '\n'.join([str(element) for element in elements])
+        body += '\n\n'
     
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
