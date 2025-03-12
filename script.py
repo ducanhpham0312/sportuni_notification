@@ -11,7 +11,7 @@ load_dotenv()
 
 # Configuration
 URL = 'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=0'
-SEARCH_TEXT = '19:00 Badminton'
+SEARCH_TEXT = '09:00 Badminton'
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 EMAIL_TO = os.getenv('EMAIL_TO')
 SMTP_SERVER = os.getenv('SMTP_SERVER')
