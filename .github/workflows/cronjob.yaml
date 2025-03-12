@@ -3,9 +3,6 @@ name: Run Python Script
 on:
   schedule:
     - cron: '* * * * *'  # Runs every minute
-  push:
-    branches:
-      - master
 
 jobs:
   run-script:
