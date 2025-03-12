@@ -15,7 +15,7 @@ URLS = [
     'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=1'
 ]
 SEARCH_TEXTS = ['19:00 Badminton', '20:00 Badminton', '21:00 Badminton', '20:30 Badminton', 
-                '21:30 Badminton', '17:00 Badminton', '18:00 Badminton']  
+                '21:30 Badminton', '17:00 Badminton', '18:00 Badminton', '17:00 Basketball', '13:00 Futsal']  
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 EMAIL_TO = os.getenv('EMAIL_TO').split(',')  # Assuming EMAIL_TO is a comma-separated list of emails
 SMTP_SERVER = os.getenv('SMTP_SERVER')
