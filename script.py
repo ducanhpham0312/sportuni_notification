@@ -46,7 +46,7 @@ def notify(all_found_elements):
     body = 'Vào SportUni đặt lịch đi nè, nhanh không kẻo lỡ:\n\n'
     
     for url, elements in all_found_elements.items():
-        body += 'Tuần này:\n' if url.includes('week=0') else 'Tuần sau:\n'
+        body += 'Tuần này:\n' if ('week=0' in url) else 'Tuần sau:\n'
         body += '\n'.join([str(element) for element in elements])
         body += '\n\n'
     
