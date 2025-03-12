@@ -63,9 +63,9 @@ def notify(all_found_elements):
         for email in EMAIL_TO:
             msg['To'] = email
             server.sendmail(EMAIL_FROM, email, msg.as_string())
+            print(f'Notification sent to {email} successfully.')
         
         server.quit()
-        print('Notification sent successfully.')
     except Exception as e:
         print(f'Failed to send notification: {e}')
 
