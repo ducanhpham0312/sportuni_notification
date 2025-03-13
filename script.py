@@ -1,10 +1,12 @@
 import os
-import requests
-from bs4 import BeautifulSoup
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import time
 
 # Load environment variables from .env file
 load_dotenv()
@@ -25,18 +27,44 @@ SMTP_PASS = os.getenv('SMTP_PASS')
 
 def check_website():
     all_found_elements = {}
+    driver = webdriver.Chrome()  # Make sure you have the ChromeDriver installed and in your PATH
     
     for url in URLS:
-        response = requests.get(url)
-        soup = BeautifulSoup(response.content, 'html.parser')
+        driver.get(url)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
         
-        found_elements = []
         for search_text in SEARCH_TEXTS:
-            elements = soup.find_all(string=lambda string: string and search_text in string)
-            found_elements.extend(elements)
-        
-        if found_elements:
-            all_found_elements[url] = found_elements
+            elements = driver.find_elements(By.XPATH, f"//*[contains(text(), '{search_text}')]")
+            for element in elements:
+                try:
+                    element.click()
+                    
+                    # Wait for 5 seconds for the new page to load
+                    time.sleep(2)
+                    
+                    # Check for "Book court 2" or "Book court 5" in the new page
+                    new_soup = BeautifulSoup(driver.page_source, 'html.parser')
+                    courts_found = []
+                    if new_soup.find(string="Book court 2"):
+                        courts_found.append("Court 2")
+                    if new_soup.find(string="Book court 5"):
+                        courts_found.append("Court 5")
+                    
+                    if len(courts_found) > 0:
+                        court_found = ', '.join(courts_found)
+                        # Find the last <li> element with role="heading" before the found element
+                        label = new_soup.find('b')
+                        if url not in all_found_elements:
+                            all_found_elements[url] = []
+                        all_found_elements[url].append(f"{label.text} - {court_found} found.")
+                    
+                    # Go back to the original URL
+                    driver.back()
+                    time.sleep(2)  # Wait for 2 seconds to ensure the page loads completely
+                except Exception as e:
+                    print(f"Error processing element {search_text}: {e}")
+    
+    driver.quit()
     
     if len(all_found_elements):
         notify(all_found_elements)
@@ -44,7 +72,7 @@ def check_website():
         print('No new schedule found.')
 
 def notify(all_found_elements):
-    subject = '[Auto] Lịch đánh cầu mới tìm thấy'
+    subject = '[Auto] New badminton schedule available'
     body = 'Vào SportUni đặt lịch đi nè, nhanh không kẻo lỡ:\n\n'
     
     for url, elements in all_found_elements.items():
@@ -63,7 +91,7 @@ def notify(all_found_elements):
         server.starttls()
         server.login(SMTP_USER, SMTP_PASS)
         
-        server.send_message(msg)
+        server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
         print('Notification sent successfully.')
         
         server.quit()
