@@ -5,8 +5,13 @@ from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
+
+chrome_options = Options()
+chrome_options.add_argument("--user-data-dir=/tmp/chrome_user_data")
+driver = webdriver.Chrome(options=chrome_options)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -27,7 +32,6 @@ SMTP_PASS = os.getenv('SMTP_PASS')
 
 def check_website():
     all_found_elements = {}
-    driver = webdriver.Chrome()  # Make sure you have the ChromeDriver installed and in your PATH
     
     for url in URLS:
         driver.get(url)
