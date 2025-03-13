@@ -98,7 +98,7 @@ def notify(all_found_elements):
         server.starttls()
         server.login(SMTP_USER, SMTP_PASS)
         
-        server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
+        server.send_message(msg)
         print('Notification sent successfully.')
         
         server.quit()
