@@ -6,12 +6,9 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import time
-
-chrome_options = Options()
-chrome_options.add_argument("--user-data-dir=/tmp/chrome_user_data")
-driver = webdriver.Chrome(options=chrome_options)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,6 +29,12 @@ SMTP_PASS = os.getenv('SMTP_PASS')
 
 def check_website():
     all_found_elements = {}
+    options = Options()
+    options.add_argument("--headless=new")  # Run in headless mode (no GUI)
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    service = Service()
+    driver = webdriver.Chrome(service=service, options=options)
     
     for url in URLS:
         driver.get(url)
