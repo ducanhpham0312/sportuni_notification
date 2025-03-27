@@ -80,6 +80,10 @@ def check_website():
         print('No new schedule found.')
 
 def notify(all_found_elements):
+    if not any(all_found_elements.values()):  # Check if there are no schedules found
+        print('No schedules to notify.')
+        return
+
     subject = '[Auto] New badminton schedule available'
     body = 'New schedule found:\n\n'
     
