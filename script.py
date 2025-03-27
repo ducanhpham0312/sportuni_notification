@@ -63,7 +63,8 @@ def check_website():
                         label = new_soup.find('b')
                         if url not in all_found_elements:
                             all_found_elements[url] = []
-                        all_found_elements[url].append(f"{label.text} - {court_found} found.")
+                        if "Sat" not in label.text and "Sun" not in label.text:
+                            all_found_elements[url].append(f"{label.text} - {court_found} found.")
                     
                     # Go back to the original URL
                     driver.back()
