@@ -81,12 +81,13 @@ def check_website():
 
 def notify(all_found_elements):
     subject = '[Auto] New badminton schedule available'
-    body = 'Vào SportUni đặt lịch đi nè, nhanh không kẻo lỡ:\n\n'
+    body = 'New schedule found:\n\n'
     
     for url, elements in all_found_elements.items():
-        body += 'Tuần này:\n' if ('week=0' in url) else 'Tuần sau:\n'
-        body += '\n'.join([str(element) for element in elements])
-        body += '\n\n'
+        if elements:
+            body += 'This week:\n' if ('week=0' in url) else 'Next week:\n'
+            body += '\n'.join([str(element) for element in elements])
+            body += '\n\n'
     
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
