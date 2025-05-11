@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import time
+import json 
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,6 +27,24 @@ SMTP_SERVER = os.getenv('SMTP_SERVER')
 SMTP_PORT = int(os.getenv('SMTP_PORT'))
 SMTP_USER = os.getenv('SMTP_USER')
 SMTP_PASS = os.getenv('SMTP_PASS')
+
+STATE_FILE = 'last_notification.json'
+
+def load_previous_state():
+    """Load the previous notification state from a file."""
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE, 'r') as file:
+            return json.load(file)
+    return {}
+
+def save_current_state(state):
+    """Save the current notification state to a file."""
+    with open(STATE_FILE, 'w') as file:
+        json.dump(state, file)
+
+def has_content_changed(current_state, previous_state):
+    """Check if the current state differs from the previous state."""
+    return current_state != previous_state
 
 def check_website():
     all_found_elements = {}
@@ -74,10 +93,12 @@ def check_website():
     
     driver.quit()
     
-    if len(all_found_elements):
+    previous_state = load_previous_state()
+    if has_content_changed(all_found_elements, previous_state):
         notify(all_found_elements)
+        save_current_state(all_found_elements)
     else:
-        print('No new schedule found.')
+        print('No new schedule found or content has not changed.')
 
 def notify(all_found_elements):
     if not any(all_found_elements.values()):  # Check if there are no schedules found
