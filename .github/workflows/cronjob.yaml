@@ -41,8 +41,13 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-        git add last_notification.json
-        git commit -m "Update last_notification.json"
-        git push
+        git pull --rebase origin master
+        if [ -n "$(git status --porcelain)" ]; then
+          git add last_notification.json
+          git commit -m "Update last_notification.json"
+          git push
+        else
+          echo "No changes to commit."
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
