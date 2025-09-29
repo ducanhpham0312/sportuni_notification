@@ -68,13 +68,12 @@ def check_website():
                     # Wait for 5 seconds for the new page to load
                     time.sleep(2)
                     
-                    # Check for "Book court 2" or "Book court 5" in the new page
+                    # Check for "Book court 1" to "Book court 6" in the new page
                     new_soup = BeautifulSoup(driver.page_source, 'html.parser')
                     courts_found = []
-                    if new_soup.find(string="Book court 2"):
-                        courts_found.append("Court 2")
-                    if new_soup.find(string="Book court 5"):
-                        courts_found.append("Court 5")
+                    for court_num in range(1, 7):
+                        if new_soup.find(string=f"Book court {court_num}"):
+                            courts_found.append(f"Court {court_num}")
                     
                     if len(courts_found) > 0:
                         court_found = ', '.join(courts_found)
@@ -83,7 +82,7 @@ def check_website():
                         if url not in all_found_elements:
                             all_found_elements[url] = []
                         if "Sat" not in label.text and "Sun" not in label.text:
-                            all_found_elements[url].append(f"{label.text} - {court_found} found.")
+                            all_found_elements[url].append(f"{label.text} - {court_found}.")
                     
                     # Go back to the original URL
                     driver.back()
