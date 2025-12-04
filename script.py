@@ -19,7 +19,7 @@ URLS = [
     'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=0',
     'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=1'
 ]
-SEARCH_TEXTS = ['15:00 Badminton', '16:00 Badminton', '17:00 Badminton', '17:30 Badminton', '18:00 Badminton', '18:30 Badminton', '19:00 Badminton', 
+SEARCH_TEXTS = ['16:00 Badminton', '17:00 Badminton', '17:30 Badminton', '18:00 Badminton', '18:30 Badminton', '19:00 Badminton', 
                 '19:30 Badminton', '20:00 Badminton', '20:30 Badminton', '21:00 Badminton', '21:30 Badminton']  
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 EMAIL_TO = os.getenv('EMAIL_TO').split(', ')  # Assuming EMAIL_TO is a comma-separated list of emails
