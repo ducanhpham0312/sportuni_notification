@@ -83,7 +83,7 @@ def check_website():
                             all_found_elements[url] = []
                         
                         # Check if it's a weekend slot (15:00-17:00) or weekday slot
-                        is_weekend_slot = search_text in ['15:00 Badminton', '16:00 Badminton']
+                        is_weekend_slot = search_text in ['17:00 Badminton', '16:00 Badminton', '18:00 Badminton']
                         is_weekend_day = "Sat" in label.text or "Sun" in label.text
                         
                         # Include weekends only for 15:00-17:00 slots, exclude weekends for other slots
