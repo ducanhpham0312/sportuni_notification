@@ -19,7 +19,7 @@ URLS = [
     'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=0',
     'https://www.tuni.fi/sportuni/omasivu/?page=selection&lang=en&type=3&area=2&week=1'
 ]
-SEARCH_TEXTS = ['16:00 Badminton', '17:00 Badminton', '17:30 Badminton', '18:00 Badminton', '18:30 Badminton', '19:00 Badminton', 
+SEARCH_TEXTS = ['17:00 Badminton', '17:30 Badminton', '08:00 Badminton', '18:30 Badminton', '19:00 Badminton', 
                 '19:30 Badminton', '20:00 Badminton', '20:30 Badminton', '21:00 Badminton', '21:30 Badminton']  
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 EMAIL_TO = os.getenv('EMAIL_TO').split(', ')  # Assuming EMAIL_TO is a comma-separated list of emails
@@ -82,13 +82,12 @@ def check_website():
                         if url not in all_found_elements:
                             all_found_elements[url] = []
                         
-                        # Check if it's a weekend slot (15:00-17:00) or weekday slot
+                        # Check if it's a weekend slot (16:00-17:00) or weekday slot
                         is_weekend_slot = search_text in ['16:00 Badminton', '16:30 Badminton']
-                        mutual_slots = search_text in ['17:00 Badminton', '17:30 Badminton', '08:00 Badminton', '18:30 Badminton']
                         is_weekend_day = "Sat" in label.text or "Sun" in label.text
                         
-                        # Include weekends only for 15:00-17:00 slots, exclude weekends for other slots
-                        if (is_weekend_slot and is_weekend_day) or (not is_weekend_slot and not is_weekend_day) or mutual_slots:
+                        # Include weekends only for 16:00-17:00 slots, exclude weekends for other slots
+                        if (is_weekend_slot and is_weekend_day) or search_text in SEARCH_TEXTS:
                             all_found_elements[url].append(f"{label.text} - {court_found}.")
                     
                     # Go back to the original URL
